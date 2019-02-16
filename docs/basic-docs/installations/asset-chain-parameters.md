@@ -207,7 +207,7 @@ Use the [`getblocksubsidy`](../komodo-api/mining.html#getblocksubsidy) rpc metho
 The `ac_perc` parameter has two different functionailites depending on the configuation of the chain params.
 
 #### ac_perc without ac_founders
-When `ac_perc` is used without [`-ac_founders`](../installations/asset-chain-parameters.html#ac-founders) the chain will follow an inflation tax model. In this model, the `-ac_perc` parameter is the percentage added to the block reward, and the transactions that allocate these rewards are sent to the `-ac_pubkey` address. Naturally, for this configuration to function the `-ac_pubkey` parameter must be included.
+When `ac_perc` is used without [`-ac_founders`](../installations/asset-chain-parameters.html#ac-founders) the chain will follow an inflation tax model. In this model, the `-ac_perc` parameter is the percentage added to the block reward, and the transactions that allocate these rewards are sent to the `-ac_pubkey` address or `-ac_script` address. Naturally, for this configuration to function the `-ac_pubkey` parameter or the `-ac_script` parameter must be included.
 
 For example, if `-ac_reward=100000000` and `-ac_perc=10000000`, for each block mined the miner receives 100000000 satoshis (1 coin), and the owner of the `-ac_pubkey` address receives 10000000 satoshis (0.1 coin, which is 10% of the miner's reward). The amount sent to the pubkey is not taken from the user, rather it is created at this point. Therefore, each transaction inflates the overall coin supply.
 
@@ -251,9 +251,9 @@ The coins rewarded to the founder are created at the moment of payment, thus inc
 
 Use `ac_pubkey` to send the founder's reward to a normal address.
 
-Use `ac_script` to send the founder's reward to a multi-signature address.
+Use `ac_script` to send the founder's reward to a multi-signature or cryptocondition address.
 
-Set `ac_founders=1` to stay compatible with most straum implementations. Any other value requires team member @blackjok3r's fork of knomp using the [disable-cb feature](https://github.com/blackjok3rtt/knomp#disable-coinbase-mode). Please reach out to our team on [`discord`](https://komodoplatform.com/discord) if you have further questions about how to set up a stratum.
+If the founder's reward is not sent to a cryptocondition address, `ac_founders=1` can be used to stay compatible with most straum implementations. Any other value requires team member @blackjok3r's fork of knomp using the [disable-cb feature](https://github.com/blackjok3rtt/knomp#disable-coinbase-mode). Please reach out to our team on [`discord`](https://komodoplatform.com/discord) if you have further questions about how to set up a stratum.
 
 ## ac_pubkey
 
@@ -273,15 +273,16 @@ A 777777-coin pre-mine, a 10-coin block reward, the chain adjusts difficulty so 
 
 ## ac_script
 
-The `ac_script` parameter enables the `ac_founders` reward to be sent to a multisig address or any p2sh address. If this parameter is used, block 1 (the "premine") will be mined to the `ac_script` address.
+The `ac_script` parameter enables the `ac_founders` and `ac_perc` founder's reward or the `ac_perc` inflation tax to be sent to a multisig address, any p2sh address or cryptocondition address. If this parameter is used, block 1 (the "premine") will be mined to the `ac_script` address.
 
-This parameter requires that `ac_founders` also be active. If `ac_script` is set, `ac_pubkey` must not be.
+This parameter requires `ac_founders` and `ac_perc` for founder's reward or just `ac_perc` for inflation tax model. If `ac_script` is set, `ac_pubkey` must not be.
 
 `ac_script` should be set to the `"hex"` value of `"scriptPubKey"`.
 
 #### Finding the `"scriptPubKey"`:
 
-To find the `"scriptPubKey"` value, first create a multisig address with the [`createmultisig`](../komodo-api/util.html#createmultisig) command.
+To find the `"scriptPubKey"` value, first create the transaction type would would like to replicate in the coinbase.
+In this example, we will use a multisig address. On a test chain generate a multisig address with the [`createmultisig`](../komodo-api/util.html#createmultisig) command.
 
 Command:
 
@@ -339,6 +340,26 @@ Set `ac_script` to the `"hex"` value from the returned json object.
 ```
 -ac_script=a9142706324daaac92c93420e985f55d88ea20e22ae187
 ```
+
+The above applies to crytocondition vouts as well. For example, using the ``"hex"`` value from a faucetfund transaction:
+::
+    {
+      "value": 1.00000000,
+      "valueZat": 100000000,
+      "n": 0,
+      "scriptPubKey": {
+        "asm": "a22c8020e029c511da55523565835887e412e5a0c9b920801b007000df45e545f25028248103120c008203000401 OP_CHECKCRYPTOCONDITION",
+        "hex": "2ea22c8020e029c511da55523565835887e412e5a0c9b920801b007000df45e545f25028248103120c008203000401cc",
+        "reqSigs": 1,
+        "type": "cryptocondition",
+        "addresses": [
+          "R9zHrofhRbub7ER77B7NrVch3A63R39GuC"
+        ]
+      }
+    }
+
+``-ac_script=2ea22c8020e029c511da55523565835887e412e5a0c9b920801b007000df45e545f25028248103120c008203000401cc``
+
 
 ## ac_cc
 
