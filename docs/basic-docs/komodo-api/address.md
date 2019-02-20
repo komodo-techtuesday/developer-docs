@@ -8,6 +8,8 @@ The following RPC calls interact with the `komodod` software, and are made avail
 
 The `getaddressbalance` method returns the confirmed balance for an address, or addresses. It requires [`addressindex`](../installations/common-runtime-parameters.html#addressindex) to be enabled.
 
+<collapse-text hidden title="JSON-schema">
+
 ### Arguments:
 
 | Structure | Type     | Description |
@@ -20,6 +22,8 @@ The `getaddressbalance` method returns the confirmed balance for an address, or 
 | ---------- | -------- | ------------------------------------------------------------------ |
 | "balance"  | (number) | the current confirmed balance in satoshis                          |
 | "received" | (number) | the total confirmed number of satoshis received (including change) |
+
+</collapse-text>
 
 #### :pushpin: Examples:
 
