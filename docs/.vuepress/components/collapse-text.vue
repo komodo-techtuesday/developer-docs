@@ -6,9 +6,19 @@
 </template>
 
 <script>
-  /* Blank lines are required both before and after the <collapse> and </collapse> tags.
+  /* 
+   Lisense:
+   https://github.com/feathers-plus/generator-feathers-plus/blob/master/LICENSE
+   The MIT License (MIT)
+   Copyright (c) 2018 Feathers-Plus
+   Copyright (c) 2017-18 John J. Szwaronek. Licensed under the MIT license.
+  
+  
+  
+  Blank lines are required both before and after the <collapse> and </collapse> tags.
    ...
-
+   
+   
    <collapse hidden title="...">
 
    ...
