@@ -600,7 +600,7 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 | Name        | Type     | Description                                                   |
 | ----------- | -------- | ------------------------------------------------------------- |
-| pkhash      | (string) | The 32-byte hash of the original public keys                  |
+| pkhash      | (string) | the 32-byte hash of the original public keys                  |
 | combined_pk | (string) | the combined pubkey of all the signers computed through MuSiG |
 | result      | (string) | whether the call was a success or failure                     |
 
@@ -629,15 +629,22 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-|      |      |             |
+| Name         | Type     | Description                                                                                                                                                                                                                                                                                                                         |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| sendtxid     | (string) | the transaction id of the transaction created by the [send](../../dynamic/cc-musig.html#send-2) method used to fund the MuSig address; only the funds in the `vout0` of the `sendtxid` are spent                                                                                                                                                                               |
+| scriptPubKey | (string) | a modified form of a pubkey to which funds are to be spent; modification: concatenate `21` at the beginning and `ac` at the end of the pubkey; If pubkey is `02f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193e` then scriptPubkey will be `2102f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193eac` |
+
+<!-- 
+FIXME: 
+The description of scriptPubkey needs to be made more coherent
+-->
 
 #### Response
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-|      |      |             |
+| msg     |(string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed            |
+| result |(string)| whether the call was a success or failure |
 
 ### session
 
