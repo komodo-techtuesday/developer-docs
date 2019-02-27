@@ -84,6 +84,212 @@ Import the private key corresponding to the pubkey used to start the daemon usin
 ./komodo-cli -ac_name=MUSIG sendrawtransaction <hex copied from the above response>
 ```
 
+## Methods available:
+
+::: tip
+
+- To learn how to use these methods, see: [cclib](../../komodo-api/cclib.html#cclib-2)
+- The `EVALCODE` of the Dynamic Module `MuSig` is `18`
+
+:::
+
+### combine
+
+**cclib combine 18 '[ "pubkey1" , "pubkey2" , .....]'**
+
+#### Parameters
+
+| Name                   | Type     | Description                                         |
+| ---------------------- | -------- | --------------------------------------------------- |
+| pubkey1, pubkey2, .... | (string) | the pubkeys of all the signers of the MuSig address |
+
+#### Response
+
+| Name        | Type     | Description                                                   |
+| ----------- | -------- | ------------------------------------------------------------- |
+| pkhash      | (string) | the 32-byte hash of the original public keys                  |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig |
+| result      | (string) | whether the call was a success or failure                     |
+
+### send
+
+**cclib send 18 '["combined_pk" , amount]'**
+
+#### Parameters
+
+| Name        | Type     | Description                                                   |
+| ----------- | -------- | ------------------------------------------------------------- |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig |
+| amount      | (number) | the amount of coins to be sent to the `combined_pk`           |
+
+#### Response
+
+| Name   | Type     | Description                                               |
+| ------ | -------- | --------------------------------------------------------- |
+| hex    | (string) | send transaction in rawtransaction format; in hexadecimal |
+| txid   | (string) | the transaction id of the send transaction                |
+| result | (string) | whether the call was a success or failure                 |
+
+### calcmsg
+
+**cclib calcmsg 18 '["sendtxid" , "scriptPubKey"]'**
+
+#### Parameters
+
+| Name         | Type     | Description                                                                                                                                                                                                                                                                                                                         |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| sendtxid     | (string) | the transaction id of the transaction created by the [send](../../dynamic/cc-musig.html#send-2) method used to fund the MuSig address; only the funds in the `vout0` of the `sendtxid` are spent                                                                                                                                    |
+| scriptPubKey | (string) | a modified form of a pubkey to which funds are to be spent; modification: concatenate `21` at the beginning and `ac` at the end of the pubkey; If pubkey is `02f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193e` then scriptPubkey will be `2102f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193eac` |
+
+<!--
+FIXME:
+The description of scriptPubkey needs to be made more coherent
+-->
+
+#### Response
+
+| Name   | Type     | Description                                                                                                                  |
+| ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| msg    | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
+| result | (string) | whether the call was a success or failure                                                                                    |
+
+### session
+
+**cclib session 18 '["myindex" , "numsigners" , "combined_pk" , "pkhash" , "msg"]'**
+
+#### Parameters
+
+| Name        | Type             | Description                                                                                                                                |
+| ----------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| myindex     | (decimal number) | index of the node that is running this method; each node must be assigned a unique index from the set: {0,1,2,3, ... , (`numsigners` - 1)} |
+| numsigners  | (decimal number) | the total number of signers participating                                                                                                  |
+| combined_pk | (string)         | the combined pubkey of all the signers computed through MuSiG                                                                              |
+| pkhash      | (string)         | the 32-byte hash of the original public keys                                                                                               |
+| msg         | (string)         | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed               |
+
+#### Response
+
+| Name       | Type             | Description                                                    |
+| ---------- | ---------------- | -------------------------------------------------------------- |
+| myind      | (decimal number) | index of the node in which this method has been run            |
+| numsigners | (decimal number) | the total number of signers participating                      |
+| commitment | (string)         | `commitment` produced by the node for this `msg` and `session` |
+| result     | (string)         | whether the call was a success or failure                      |
+
+### commit
+
+**cclib commit 18 '["pkhash" , ind , "commitment"]'**
+
+#### Parameters
+
+| Name       | Type             | Description                                                               |
+| ---------- | ---------------- | ------------------------------------------------------------------------- |
+| pkhash     | (string)         | the 32-byte hash of the original public keys                              |
+| ind        | (decimal number) | index of the node, whose `commitment` is being added to the global struct |
+| commitment | (string)         | `commitment` produced by the node with index `ind`                        |
+
+#### Response
+
+| Name        | Type             | Description                                                    |
+| ----------- | ---------------- | -------------------------------------------------------------- |
+| added_index | (decimal number) | index of the node whose `commitment` has been added            |
+| myind       | (decimal number) | index of the node in which this method has been run            |
+| nonce       | (string)         | `nonce` produced by the node in which this method has been run |
+| result      | (string)         | whether the call was a success or failure                      |
+
+### nonce
+
+**cclib nonce 18 '["pkhash" , ind , "nonce"]'**
+
+#### Parameters
+
+| Name   | Type             | Description                                                          |
+| ------ | ---------------- | -------------------------------------------------------------------- |
+| pkhash | (string)         | the 32-byte hash of the original public keys                         |
+| ind    | (decimal number) | index of the node, whose `nonce` is being added to the global struct |
+| nonce  | (string)         | `nonce` produced by the node with index `ind`                        |
+
+#### Response
+
+| Name        | Type             | Description                                                         |
+| ----------- | ---------------- | ------------------------------------------------------------------- |
+| added_index | (decimal number) | index of the node whose `nonce` has been added                      |
+| myind       | (decimal number) | index of the node in which this method has been run                 |
+| partialsig  | (string)         | `partialsig` produced by the node in which this method has been run |
+| result      | (string)         | whether the call was a success or failure                           |
+
+### partialsig
+
+**cclib partialsig 18 '["pkhash" , ind , "partialsig"]'**
+
+#### Parameters
+
+#### Parameters
+
+| Name       | Type             | Description                                                               |
+| ---------- | ---------------- | ------------------------------------------------------------------------- |
+| pkhash     | (string)         | the 32-byte hash of the original public keys                              |
+| ind        | (decimal number) | index of the node, whose `partialsig` is being added to the global struct |
+| partialsig | (string)         | `partialsig` produced by the node with index `ind`                        |
+
+#### Response
+
+| Name        | Type             | Description                                                          |
+| ----------- | ---------------- | -------------------------------------------------------------------- |
+| added_index | (decimal number) | index of the node whose `partialsig` has been added                  |
+| myind       | (decimal number) | index of the node in which this method has been run                  |
+| combinedsig | (string)         | `combinedsig` produced by the node in which this method has been run |
+| result      | (string)         | whether the call was a success or failure                            |
+
+### verify
+
+**cclib verify 18 '["msg" , "combined_pk" , "combinedsig"]'**
+
+#### Parameters
+
+| Name        | Type     | Description                                                                                                                  |
+| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
+| combinedsig | (string) | `combinedsig` produced by the node in which this method is being run                                                         |
+
+#### Response
+
+| Name        | Type     | Description                                                                                                                  |
+| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
+| combinedsig | (string) | `combinedsig` produced by the node in which this method is being run                                                         |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
+| result      | (string)         | whether the call was a success or failure                            |
+
+### spend
+
+**cclib spend 18 '["sendtxid" , "combinedsig" , "scriptPubKey"]'**
+
+#### Parameters
+
+| Name         | Type     | Description                                                                                                                                                                                                                                                                                                                         |
+| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| sendtxid     | (string) | the transaction id of the transaction created by the [send](../../dynamic/cc-musig.html#send-2) method used to fund the MuSig address; only the funds in the `vout0` of the `sendtxid` are spent                                                                                                                                    |
+| combinedsig  | (string) | the combined signature produced by all the signers                                                                                                                                                                                                                                                                                  |
+| scriptPubKey | (string) | a modified form of a pubkey to which funds are to be spent; modification: concatenate `21` at the beginning and `ac` at the end of the pubkey; If pubkey is `02f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193e` then scriptPubkey will be `2102f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193eac` |
+
+<!--
+FIXME:
+The description of scriptPubkey needs to be made more coherent
+-->
+
+#### Response
+
+| Name        | Type     | Description                                                                                                                  |
+| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
+| combinedsig | (string) | the combined signature produced by all the signers                                                                           |
+| hex         | (string) | `spend` transaction in rawtransaction format; in hexadecimal                                                                 |
+| txid        | (string) | the transaction id of the spend transaction                                                                                  |
+| result      | (string) | whether the call was a success or failure                                                                                    |
+
 ## Work flow when using MuSig
 
 ::: tip
@@ -578,207 +784,4 @@ Response:
 
 :::
 
-## Explanations
 
-| Name     | Type             | Description                                  |
-| -------- | ---------------- | -------------------------------------------- |
-| evalcode | (decimal number) | `EVALCODE` of the Dynamic Module of interest |
-
-These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.html#cclib-2)
-
-### combine
-
-**cclib combine 18 '[ "pubkey1" , "pubkey2" , .....]'**
-
-#### Parameters
-
-| Name                   | Type     | Description                                         |
-| ---------------------- | -------- | --------------------------------------------------- |
-| pubkey1, pubkey2, .... | (string) | the pubkeys of all the signers of the MuSig address |
-
-#### Response
-
-| Name        | Type     | Description                                                   |
-| ----------- | -------- | ------------------------------------------------------------- |
-| pkhash      | (string) | the 32-byte hash of the original public keys                  |
-| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig |
-| result      | (string) | whether the call was a success or failure                     |
-
-### send
-
-**cclib send 18 '["combined_pk" , amount]'**
-
-#### Parameters
-
-| Name        | Type     | Description                                                   |
-| ----------- | -------- | ------------------------------------------------------------- |
-| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig |
-| amount      | (number) | the amount of coins to be sent to the `combined_pk`           |
-
-#### Response
-
-| Name   | Type     | Description                                               |
-| ------ | -------- | --------------------------------------------------------- |
-| hex    | (string) | send transaction in rawtransaction format; in hexadecimal |
-| txid   | (string) | the transaction id of the send transaction                |
-| result | (string) | whether the call was a success or failure                 |
-
-### calcmsg
-
-**cclib calcmsg 18 '["sendtxid" , "scriptPubKey"]'**
-
-#### Parameters
-
-| Name         | Type     | Description                                                                                                                                                                                                                                                                                                                         |
-| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| sendtxid     | (string) | the transaction id of the transaction created by the [send](../../dynamic/cc-musig.html#send-2) method used to fund the MuSig address; only the funds in the `vout0` of the `sendtxid` are spent                                                                                                                                    |
-| scriptPubKey | (string) | a modified form of a pubkey to which funds are to be spent; modification: concatenate `21` at the beginning and `ac` at the end of the pubkey; If pubkey is `02f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193e` then scriptPubkey will be `2102f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193eac` |
-
-<!--
-FIXME:
-The description of scriptPubkey needs to be made more coherent
--->
-
-#### Response
-
-| Name   | Type     | Description                                                                                                                  |
-| ------ | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| msg    | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
-| result | (string) | whether the call was a success or failure                                                                                    |
-
-### session
-
-**cclib session 18 '["myindex" , "numsigners" , "combined_pk" , "pkhash" , "msg"]'**
-
-#### Parameters
-
-| Name        | Type             | Description                                                                                                                                |
-| ----------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| myindex     | (decimal number) | index of the node that is running this method; each node must be assigned a unique index from the set: {0,1,2,3, ... , (`numsigners` - 1)} |
-| numsigners  | (decimal number) | the total number of signers participating                                                                                                  |
-| combined_pk | (string)         | the combined pubkey of all the signers computed through MuSiG                                                                              |
-| pkhash      | (string)         | the 32-byte hash of the original public keys                                                                                               |
-| msg         | (string)         | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed               |
-
-#### Response
-
-| Name       | Type             | Description                                                    |
-| ---------- | ---------------- | -------------------------------------------------------------- |
-| myind      | (decimal number) | index of the node in which this method has been run            |
-| numsigners | (decimal number) | the total number of signers participating                      |
-| commitment | (string)         | `commitment` produced by the node for this `msg` and `session` |
-| result     | (string)         | whether the call was a success or failure                      |
-
-### commit
-
-**cclib commit 18 '["pkhash" , ind , "commitment"]'**
-
-#### Parameters
-
-| Name       | Type             | Description                                                               |
-| ---------- | ---------------- | ------------------------------------------------------------------------- |
-| pkhash     | (string)         | the 32-byte hash of the original public keys                              |
-| ind        | (decimal number) | index of the node, whose `commitment` is being added to the global struct |
-| commitment | (string)         | `commitment` produced by the node with index `ind`                        |
-
-#### Response
-
-| Name        | Type             | Description                                                    |
-| ----------- | ---------------- | -------------------------------------------------------------- |
-| added_index | (decimal number) | index of the node whose `commitment` has been added            |
-| myind       | (decimal number) | index of the node in which this method has been run            |
-| nonce       | (string)         | `nonce` produced by the node in which this method has been run |
-| result      | (string)         | whether the call was a success or failure                      |
-
-### nonce
-
-**cclib nonce 18 '["pkhash" , ind , "nonce"]'**
-
-#### Parameters
-
-| Name   | Type             | Description                                                          |
-| ------ | ---------------- | -------------------------------------------------------------------- |
-| pkhash | (string)         | the 32-byte hash of the original public keys                         |
-| ind    | (decimal number) | index of the node, whose `nonce` is being added to the global struct |
-| nonce  | (string)         | `nonce` produced by the node with index `ind`                        |
-
-#### Response
-
-| Name        | Type             | Description                                                         |
-| ----------- | ---------------- | ------------------------------------------------------------------- |
-| added_index | (decimal number) | index of the node whose `nonce` has been added                      |
-| myind       | (decimal number) | index of the node in which this method has been run                 |
-| partialsig  | (string)         | `partialsig` produced by the node in which this method has been run |
-| result      | (string)         | whether the call was a success or failure                           |
-
-### partialsig
-
-**cclib partialsig 18 '["pkhash" , ind , "partialsig"]'**
-
-#### Parameters
-
-#### Parameters
-
-| Name       | Type             | Description                                                               |
-| ---------- | ---------------- | ------------------------------------------------------------------------- |
-| pkhash     | (string)         | the 32-byte hash of the original public keys                              |
-| ind        | (decimal number) | index of the node, whose `partialsig` is being added to the global struct |
-| partialsig | (string)         | `partialsig` produced by the node with index `ind`                        |
-
-#### Response
-
-| Name        | Type             | Description                                                          |
-| ----------- | ---------------- | -------------------------------------------------------------------- |
-| added_index | (decimal number) | index of the node whose `partialsig` has been added                  |
-| myind       | (decimal number) | index of the node in which this method has been run                  |
-| combinedsig | (string)         | `combinedsig` produced by the node in which this method has been run |
-| result      | (string)         | whether the call was a success or failure                            |
-
-### verify
-
-**cclib verify 18 '["msg" , "combined_pk" , "combinedsig"]'**
-
-#### Parameters
-
-| Name        | Type     | Description                                                                                                                  |
-| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
-| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
-| combinedsig | (string) | `combinedsig` produced by the node in which this method is being run                                                         |
-
-#### Response
-
-| Name        | Type     | Description                                                                                                                  |
-| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
-| combinedsig | (string) | `combinedsig` produced by the node in which this method is being run                                                         |
-| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
-| result      | (string)         | whether the call was a success or failure                            |
-
-### spend
-
-**cclib spend 18 '["sendtxid" , "combinedsig" , "scriptPubKey"]'**
-
-#### Parameters
-
-| Name         | Type     | Description                                                                                                                                                                                                                                                                                                                         |
-| ------------ | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| sendtxid     | (string) | the transaction id of the transaction created by the [send](../../dynamic/cc-musig.html#send-2) method used to fund the MuSig address; only the funds in the `vout0` of the `sendtxid` are spent                                                                                                                                    |
-| combinedsig  | (string) | the combined signature produced by all the signers                                                                                                                                                                                                                                                                                  |
-| scriptPubKey | (string) | a modified form of a pubkey to which funds are to be spent; modification: concatenate `21` at the beginning and `ac` at the end of the pubkey; If pubkey is `02f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193e` then scriptPubkey will be `2102f7597468703c1c5c8465dd6d43acaae697df9df30bed21494d193412a1ea193eac` |
-
-<!--
-FIXME:
-The description of scriptPubkey needs to be made more coherent
--->
-
-#### Response
-
-| Name        | Type     | Description                                                                                                                  |
-| ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
-| combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
-| combinedsig | (string) | the combined signature produced by all the signers                                                                           |
-| hex         | (string) | `spend` transaction in rawtransaction format; in hexadecimal                                                                 |
-| txid        | (string) | the transaction id of the spend transaction                                                                                  |
-| result      | (string) | whether the call was a success or failure                                                                                    |
