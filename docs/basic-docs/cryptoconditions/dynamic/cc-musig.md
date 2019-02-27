@@ -736,15 +736,15 @@ The description of scriptPubkey needs to be made more coherent
 
 ### verify
 
-**cclib verify 18 '["msg" , "combinedsig" , "combined_pk"]'**
+**cclib verify 18 '["msg" , "combined_pk" , "combinedsig"]'**
 
 #### Parameters
 
 | Name        | Type     | Description                                                                                                                  |
 | ----------- | -------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | msg         | (string) | the message that needs to be signed by all the signers for the final [spend](../../dynamic/cc-musig.html#spend-2) to succeed |
-| combinedsig | (string) | `combinedsig` produced by the node in which this method is being run                                                         |
 | combined_pk | (string) | the combined pubkey of all the signers computed through MuSig                                                                |
+| combinedsig | (string) | `combinedsig` produced by the node in which this method is being run                                                         |
 
 #### Response
 
