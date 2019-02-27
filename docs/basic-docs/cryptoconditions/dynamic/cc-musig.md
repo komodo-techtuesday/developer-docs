@@ -580,25 +580,29 @@ Response:
 
 ## Explanations
 
+| Name     | Type             | Description                                  |
+| -------- | ---------------- | -------------------------------------------- |
+| evalcode | (decimal number) | `EVALCODE` of the Dynamic Module of interest |
+
 These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.html#cclib-2)
 
 ### combine
 
 **cclib combine 18 '[ "pubkey1" , "pubkey2" , .....]'**
 
-
-
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name                | Type     | Description                                         |
+| ------------------- | -------- | --------------------------------------------------- |
+| pubkey1, pubkey2, .... | (string) | the pubkeys of all the signers of the MuSig address |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name        | Type     | Description                                                   |
+| ----------- | -------- | ------------------------------------------------------------- |
+| pkhash      | (string) | The 32-byte hash of the original public keys                  |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSiG |
+| result      | (string) | whether the call was a success or failure                     |
 
 ### send
 
@@ -606,15 +610,18 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name        | Type     | Description                                                   |
+| ----------- | -------- | ------------------------------------------------------------- |
+| combined_pk | (string) | the combined pubkey of all the signers computed through MuSiG |
+| amount      | (number) | the amount of coins to be sent to the `combined_pk`           |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name   | Type     | Description                                               |
+| ------ | -------- | --------------------------------------------------------- |
+| hex    | (string) | send transaction in rawtransaction format; in hexadecimal |
+| txid   | (string) | the transaction id of the send transaction                |
+| result | (string) | whether the call was a success or failure                 |
 
 ### calcmsg
 
@@ -622,15 +629,15 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 ### session
 
@@ -638,15 +645,15 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 ### commit
 
@@ -654,15 +661,15 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 ### nonce
 
@@ -670,15 +677,15 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 ### partialsig
 
@@ -686,15 +693,15 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 ### verify
 
@@ -702,15 +709,15 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 ### spend
 
@@ -718,12 +725,12 @@ These methods can be used through the RPC call: [cclib](../../komodo-api/cclib.h
 
 #### Parameters
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
 
 #### Response
 
-| Name   | Type     | Description                        |
-| ------ | -------- | ---------------------------------- |
-|        |          |                                    |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+|      |      |             |
