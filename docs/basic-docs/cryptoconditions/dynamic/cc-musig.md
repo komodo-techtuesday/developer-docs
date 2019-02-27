@@ -84,6 +84,10 @@ Import the private key corresponding to the pubkey used to start the daemon usin
 ./komodo-cli -ac_name=MUSIG sendrawtransaction <hex copied from the above response>
 ```
 
+::: tip
+Jump to [flow](../dynamic/cc-musig.html#work-flow-when-using-musig) or [example](../dynamic/cc-musig.html#a-complete-example) for more details and explanation.
+:::
+
 ## Methods available:
 
 ::: tip
