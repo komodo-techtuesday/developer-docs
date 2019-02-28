@@ -297,7 +297,7 @@ The `verify` method verifies that the `combinedsig` is able to spend the funds o
 
 ### spend
 
-#### cclib spend 18 '["sendtxid" , "combinedsig" , "scriptPubKey"]'
+#### cclib spend 18 '[ "sendtxid" , "scriptPubKey" , "combinedsig" ]'
 
 The `spend` method generates the raw transaction that needs to be broadcast to spend the coins to the `pubkey` that was used to create `scriptPubKey` .
 
@@ -332,8 +332,8 @@ See the [Working Example](../dynamic/cc-musig.html#a-complete-example) for more 
 :::
 
 - First make a combined pubkey using the method [combine.](../dynamic/cc-musig.html#combine) From the response, take note of `combined_pk` and `pkhash`
-- Next, send some coins to the `combined_pk` using the method [send.](../dynamic/cc-musig.html#send) From the decoded rawtransaction, take note of the `sendtxid` and `change_script`
-- Now calculate the message that needs to be signed by all the parties using the method [calcmsg,](../dynamic/cc-musig.html#calcmsg) which uses `sendtxid` and `change_script` as arguments. From the response, take note of `msg` . To create a valid spend, this `msg` needs to be signed by all the participating pubkeys.
+- Next, send some coins to the `combined_pk` using the method [send.](../dynamic/cc-musig.html#send) From the decoded rawtransaction, take note of the transaction id, which will be called `sendtxid` from now.
+- Now calculate the message that needs to be signed by all the parties using the method [calcmsg,](../dynamic/cc-musig.html#calcmsg) which uses `sendtxid` and `scriptPubkey` as arguments. From the response, take note of `msg` . To create a valid spend, this `msg` needs to be signed by all the participating pubkeys.
 - On each signing node, a session needs to be created using the method [session,](../dynamic/cc-musig.html#session) which takes the follwing arguments: `ind` (index; node with the first pubkey gets `0`),`numsigners` (number of pubkeys participating), `combined_pk`, `pkhash`, `msg` (message to be signed). From the response on each node, take note of the `commitment` and send all the `commitment`s to all the other nodes.
 
 ::: warning
@@ -353,7 +353,7 @@ See the [Working Example](../dynamic/cc-musig.html#a-complete-example) for more 
 - Finally, on each node, use the method [partialsig,](../dynamic/cc-musig.html#partialsig)
   which takes the arguments: `pkhash` and `partialsig`s from all the other nodes to output `combinedsig`s. Make sure to exchange the `combinedsig`s from all the nodes so that each node will have `combinedsig`s from all the other nodes. You can verify that all the nodes produced the same `combinedsig` .
 - Now, for a sanity test, the method [verify](../dynamic/cc-musig.html#verify) can be used to make sure that, this `combinedsig` will work with the `msg` needed for the spend. It takes the arguments `msg`,`combined_pk`, `combinedsig` .
-- Now the [spend](../dynamic/cc-musig.html#spend) part. This method takes `sendtxid`,`change_script`,`combinedsig` as arguments. <!-- who can spend, how much, the code needs to be updated to control these things -->
+- Now the [spend](../dynamic/cc-musig.html#spend) part. This method takes `sendtxid`,`scriptPubkey`,`combinedsig` as arguments. <!-- how much can be spent, the code needs to be updated to control this -->
 
 ## A Complete Example
 
@@ -486,6 +486,10 @@ Response:
 #### In Node1
 
 The arguments are `sendtxid` and `change_script`
+
+::: tip
+We are using `change_script` and not any other `scriptPubKey` to make the spend to **Node1.**
+:::
 
 Command:
 
