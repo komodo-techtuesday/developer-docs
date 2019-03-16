@@ -15,7 +15,7 @@ We are fortunate to have been gifted the ability to launch provable ecosystems t
 * Nodes is the jargon term for computers that do the computations to maintain the network.
 * Maintaining the network is done by validating.  OP_CODES are the instructions of the network that need validating.
 * Some nodes are heavily computational (miners), some are quiet and store a valuable private key within the wallet.
-* There's additional software to make this blockchain useful (for transfering vlue) & easier to use just like the internet is useful for transfering information (blockchain: Mobile Wallets, DEX, Explorers vs webserver, database, email & streaming protocols)
+* There's additional software to make this blockchain useful (for transfering value) & easier to use. Like the internet became useful for transfering information, blockchain technology enables dApps to create new ways of collaborating.  Blockchain: Mobile Wallets, DEX, Explorers vs WWW: webserver, database, email & streaming protocols)
 
 ## Goal of our custom consensus module
 This `customcc` loadable library example is simply something that requires to send 1 coin.  It can't get much simpler.
@@ -33,9 +33,9 @@ Open the 3 files
 * customcc.cpp [src](https://github.com/jl777/komodo/blob/jl777/src/cc/customcc.cpp)
 * makecustom [src](https://github.com/jl777/komodo/blob/jl777/src/cc/makecustom)
 
-These are the three files we'll work on for learning how to apply custom consensus to a blockchain.  For most 1st & 2nd generation blockchain projects, changing consensus is a bold undertaking.  Komodo has turned it into a loadable module - no other project offers this to a custom blockchain.  Isn't it time to think about building on Komodo technology?
+These are the three files we'll work on for learning how to apply custom consensus to a blockchain.  For most 1st & 2nd generation blockchain projects, changing consensus is a bold undertaking.  Komodo has turned it into a loadable module removing the risk of severe bugs - no other project offers this to a custom blockchain.
 
-These 3 files are not boilercode.  It may look like boilercode but it's the gateway to much more powerful stuff.   This is the pandoras box of dApps.  Get ready!
+These 3 files are not boilercode.  It may look like boilercode but it's the gateway to much more powerful stuff.   This is the pandoras box of dApps.  Get ready to understand how to develop on a secure multi-chain distrbuted transactional system.
 
 ## customcc.h header file - definitions of functions and variables
 From the top, the comments provide a nice summary of what our custom cclib will do.
