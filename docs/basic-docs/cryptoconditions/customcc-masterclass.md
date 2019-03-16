@@ -82,10 +82,10 @@ The declarations for the functions in customcc.cpp - func0 and func1
 * `MYCCNAME` is declared previously as "custom"
 * `func0` is the name of the first RPC call
 * The `<parameter help>` can be replaced with your functions help text.
-* The `1,1,'0', EVAL_CUSTOM` means: 1 mandatory parameter, maximum of 1 parameter, 0 is the function id for custom consensus 0x11 (decimal 17)
+* The `1,1,'0', EVAL_CUSTOM` means: 1 mandatory parameter, maximum of 1 parameter, 0 is the function id for custom consensus `EVAL_CUSTOM`, in this case `0x11` (decimal 17)
 * `func1` is the name of the next RPC call
 * The `<no args>` is the real help text this time.  This RPC call `func1` requires no arguments, like `komodo-cli getinfo`
-* The `0,0,'1', EVAL_CUSTOM` mean: 0 mandatory parameters, maximum of 0 parameters, 1 is the function id for custom consensus 0x11 (decimal 17)
+* The `0,0,'1', EVAL_CUSTOM` mean: 0 mandatory parameters, maximum of 0 parameters, 1 is the function id for custom consensus `EVAL_CUSTOM`, in this case `0x11` (decimal 17)
 
 ### Declaration of functions
 ```cpp
