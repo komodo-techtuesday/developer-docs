@@ -73,6 +73,8 @@ The `CUSTOM_TXFEE` is the default transaction fee for this type of transaction. 
 
 
 ### Declarations of the RPC calls
+This is the way 3rd party developers (front end developers) and devops engineers will interact with your custom crypto condition with commands like `komodo-cli -ac_name=CUSTOM custom_func0` and `komodo-cli -ac_name=CUSTOM custom_func1`.
+
 ```cpp
 { (char *)MYCCNAME, (char *)"func0", (char *)"<parameter help>", 1, 1, '0', EVAL_CUSTOM },
 { (char *)MYCCNAME, (char *)"func1", (char *)"<no args>", 0, 0, '1', EVAL_CUSTOM },
