@@ -65,11 +65,11 @@ For example `custom_validate`.
 #define EVAL_CUSTOM (EVAL_FAUCET2+1)
 #define CUSTOM_TXFEE 10000
 ```
-The `EVAL_FAUCET2` is a constant (footnote: 1a & 1b) (0x10 or decimal 16).   These `EVAL_` constants are identifiers.  They are used to route the validation code.  The low-level bitcoin script in Komodo has a new op_code called OP_CHECKCRYPTOCONDITION.   When any node on the network needs to validate this OP_CHECKCRYPTOCONDITION op_code, it looks up which `EVAL_` code it is.
+The `EVAL_FAUCET2` is a constant (footnote: 1a & 1b) (`0x10` or decimal 16).   These `EVAL_...` constants are identifiers.  They are used to route the validation code.  The low-level bitcoin script in Komodo has a new op_code called `OP_CHECKCRYPTOCONDITION`.   When any node on the network needs to validate this `OP_CHECKCRYPTOCONDITION` op_code, it looks up which `EVAL_...` code it is.
 
-Custom consensus starts at `EVAL_FAUCET2` and add `+1` to it for your .  Therefore, `EVAL_CUSTOM` is 0x11 = decimal 17.
+Custom consensus starts at `EVAL_FAUCET2` and add `+1` to it for your .  Therefore, `EVAL_CUSTOM` is `0x11` = decimal 17.
 
-The `CUSTOM_TXFEE` is the default transaction fee for this type of transaction.  The default txfee for this EVAL_ code consensus is decimal 17 (0x11).
+The `CUSTOM_TXFEE` is the default transaction fee for this type of transaction.  The default txfee for this `EVAL_...` code consensus is `10000` assetoshi (0.0001).
 
 
 ### Declarations of the RPC calls
@@ -82,10 +82,10 @@ The declarations for the functions in customcc.cpp - func0 and func1
 * `MYCCNAME` is declared previously as "custom"
 * `func0` is the name of the first RPC call
 * The `<parameter help>` can be replaced with your functions help text.
-* The 1,1,'0', EVAL_CUSTOM means: 1 mandatory parameter, maximum of 1 parameter, 0 is the function id for custom consensus 0x11 (decimal 17)
+* The `1,1,'0', EVAL_CUSTOM` means: 1 mandatory parameter, maximum of 1 parameter, 0 is the function id for custom consensus 0x11 (decimal 17)
 * `func1` is the name of the next RPC call
 * The `<no args>` is the real help text this time.  This RPC call `func1` requires no arguments, like `komodo-cli getinfo`
-* The 0,0,'1', EVAL_CUSTOM mean: 0 mandatory parameters, maximum of 0 parameters, 1 is the function id for custom consensus 0x11 (decimal 17)
+* The `0,0,'1', EVAL_CUSTOM` mean: 0 mandatory parameters, maximum of 0 parameters, 1 is the function id for custom consensus 0x11 (decimal 17)
 
 ### Declaration of functions
 ```cpp
