@@ -125,7 +125,7 @@ if ( cp->evalcode == EVAL_CUSTOM ) \
 }
 ```
 
-The developer must then map the RPC names to the function/method.  This mapping follows the same naming convention that has already been defined.  Namely, `MYCCNAME` + `_` + `FUNCTIONNAME` when the comparison (if statement) of `method` and `FUNCTIONNAME` are equal.
+The developer must then map the RPC names to the function/method.  This mapping follows the same naming convention that has already been defined.  Namely, `MYCCNAME` + `_` + `FUNCTIONNAME`.  If no match, then an error message returned and no harm done.
 
 e.g.
 ```cpp
