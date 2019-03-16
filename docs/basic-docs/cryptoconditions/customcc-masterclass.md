@@ -60,7 +60,7 @@ The naming convention used for building a custom consensus library follows:
 For example `custom_validate`.
 
 
-### Declaratoin of constants
+### Declaration of constants
 ```cpp
 #define EVAL_CUSTOM (EVAL_FAUCET2+1)
 #define CUSTOM_TXFEE 10000
@@ -125,7 +125,7 @@ if ( cp->evalcode == EVAL_CUSTOM ) \
 }
 ```
 
-The part the developer has to do correctly is use the same naming convention that has already been defined.  Namely, `MYCCNAME` + `_` + `FUNCTIONNAME` when the comparison (if statement) of `method` and `FUNCTIONNAME` are equal.
+The developer must then map the RPC names to the function/method.  This mapping follows the same naming convention that has already been defined.  Namely, `MYCCNAME` + `_` + `FUNCTIONNAME` when the comparison (if statement) of `method` and `FUNCTIONNAME` are equal.
 
 e.g.
 ```cpp
