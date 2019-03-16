@@ -47,13 +47,13 @@ One is referenced externally (`MYCCLIBNAME`) at komodo start.  The other interna
 std::string MYCCLIBNAME = (char *)"customcc";
 #define MYCCNAME "custom"
 ```
-`MYCCLIBNAME` This is the name of the loadable library module.  Here it is "customcc".  This is what is used on the command line to load your custom consensus when [starting your custom blockchain](/basic-docs/installations/creating-asset-chains.html) on a komodo server.
+`MYCCLIBNAME` This is the name of the loadable library module being created.  Here it is "customcc".  This is what is used on the command line to load your custom consensus when [starting your custom blockchain](/basic-docs/installations/creating-asset-chains.html) on a komodo server.
 
 ```bash
--ac_cclib=customcc
+komodod -ac_name=CUSTOM -ac_cc=1 -ac_cclib=customcc ...
 ```
 
-The `MYCCNAME` is the prefix for RPC calls and standard consensus functions like `validate`.
+The `MYCCNAME` is the prefix for RPC calls and standard consensus functions (e.g. `validate`).
 The naming convention used for building a custom consensus library follows:
 * MYCCNAME_FUNCTIONNAME
 
@@ -67,13 +67,13 @@ For example `custom_validate`.
 ```
 The `EVAL_FAUCET2` is a constant (footnote: 1a & 1b) (`0x10` or decimal 16).   These `EVAL_...` constants are identifiers.  They are used to route the validation code.  The low-level bitcoin script in Komodo has a new op_code called `OP_CHECKCRYPTOCONDITION`.   When any node on the network needs to validate this `OP_CHECKCRYPTOCONDITION` op_code, it looks up which `EVAL_...` code it is.
 
-Custom consensus starts at `EVAL_FAUCET2` and add `+1` to it for your .  Therefore, `EVAL_CUSTOM` is `0x11` = decimal 17.
+Custom consensus starts at `EVAL_FAUCET2` and add `+1` to it for your customcc library.  Therefore, `EVAL_CUSTOM` is `0x11` = decimal 17.
 
-The `CUSTOM_TXFEE` is the default transaction fee for this type of transaction.  The default txfee for this `EVAL_...` code consensus is `10000` assetoshi (0.0001).
+The `CUSTOM_TXFEE` is the default transaction fee for this type of transaction.  The default txfee for this `EVAL_...` code consensus is `10000` assetoshis (0.0001).
 
 
 ### Declarations of the RPC calls
-This is the way 3rd party developers (front end developers) and devops engineers will interact with your custom crypto condition with commands like `komodo-cli -ac_name=CUSTOM custom_func0` and `komodo-cli -ac_name=CUSTOM custom_func1`.
+This is the way 3rd party developers (e.g. front-end developers) and command-line users will interact with your custom crypto condition.  For example commands like `komodo-cli -ac_name=CUSTOM custom_func0` and `komodo-cli -ac_name=CUSTOM custom_func1`.
 
 ```cpp
 { (char *)MYCCNAME, (char *)"func0", (char *)"<parameter help>", 1, 1, '0', EVAL_CUSTOM },
