@@ -1,4 +1,4 @@
-## Introduction
+## Custom Consensus Implementation Walkthrough (WIP)
 
 *THIS SECTION FOR THE NEXT 50 OR SO LINES UNTIL EOF SHOULD GO IN SOME NARRATIVE SECTION*
 
