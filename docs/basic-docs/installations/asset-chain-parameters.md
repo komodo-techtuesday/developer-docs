@@ -118,6 +118,34 @@ A 777777-coin pre-mine, with a 5-coin block reward, the block reward decreases b
 ./komodod -ac_name=HELLOWORLD -ac_supply=777777 -ac_reward=500000000 -ac_halving=2000 -ac_end=10000 &
 ```
 
+## ac_ccactivate
+
+**-ac_ccactivate=block_height**
+
+The `ac_ccactivate` launch parameter allows for the activation of CryptoConditions (CC) on an existing Komodo-based asset chain wherein CC was not originally enabled.
+
+Add the `ac_ccactivate` parameter to the existing launch command for the asset chain and set the value equal to a future block height. When this block height is reached, CC will be available on the asset chain. 
+
+This change requires a hard fork of the asset chain. If the asset chain is receiving Komodo's dPoW security service, the notary nodes must relaunch their asset-chain daemons with the new launch parameter. All nodes must also update their daemons in the same manner.
+
+By default, `ac_ccactivate` uses the default `ac_cc` value of `ac_cc=2`. It is not necessary to further specify `ac_cc` in the launch parameters, unless a value other than `2` is required. 
+
+#### :pushpin: Example:
+
+Before using `ac_ccactivate`:
+
+```bash
+./komodod -ac_name=EXAMPLE -ac_supply=72000000 -addnode=24.54.206.138 &
+```
+
+After using `ac_ccactivate`:
+
+```bash
+./komodod -ac_name=EXAMPLE -ac_supply=72000000 -ac_ccactivate=140 -addnode=24.54.206.138 &
+```
+
+In this example, CryptoConditions will be available at blockheight `140`. All nodes, include the notary nodes, must relaunch the daemon with the new parameters before blockheight `140`.
+
 ## ac_halving
 
 This is the number of blocks between each block reward halving. This parameter will have no effect if [ac_reward](../installations/asset-chain-parameters.html#ac-reward) is not set. The lowest possible value is `1440` (~1 day). If this parameter is set, but [ac_decay](../installations/asset-chain-parameters.html#ac-decay) is not, the reward will decrease by 50% each halving.
@@ -203,7 +231,7 @@ Use the [getblocksubsidy](../komodo-api/mining.html#getblocksubsidy) rpc method 
 
 ## ac_perc
 
-The `ac_perc` parameter has two different functionailites depending on the configuation of the chain params.
+The `ac_perc` parameter has two different functionalities depending on the configuration of the chain parameters.
 
 #### ac_perc without ac_founders
 When `ac_perc` is used without [-ac_founders](../installations/asset-chain-parameters.html#ac-founders) the chain will follow an inflation tax model. In this model, the `-ac_perc` parameter is the percentage added to the block reward, and the transactions that allocate these rewards are sent to the `-ac_pubkey` address. Naturally, for this configuration to function the `-ac_pubkey` parameter must be included.
@@ -213,7 +241,7 @@ For example, if `-ac_reward=100000000` and `-ac_perc=10000000`, for each block m
 The maximum amount of coins created via this method across all transactions per block is capped at `(1000000 * <percentage>)`.
 
 ::: tip
-Vout 1 of each coinbase transaction must be the correct amount sent to the corresponding pubkey. This only affects a miner trying to use a stratum. Team member, [Blackjok3r](https://github.com/blackjok3rtt/), developed a coinbase overide method for this purpose. Please see [this repo](https://github.com/blackjok3rtt/knomp#disable-coinbase-mode) for details.
+Vout 1 of each coinbase transaction must be the correct amount sent to the corresponding pubkey. This only affects a miner trying to use a stratum. Team member, [Blackjok3r](https://github.com/blackjok3rtt/), developed a coinbase-override method for this purpose. Please see [this repo](https://github.com/blackjok3rtt/knomp#disable-coinbase-mode) for details.
 :::
 
 #### ac_perc with ac_founders
@@ -222,7 +250,7 @@ Please see the [-ac_founders](../installations/asset-chain-parameters.html#ac-fo
 
 #### :pushpin: Examples:
 
-This example coin combines both `ac_staked` and `ac_perc`. As described in the section, ["Notes on How ac_staked Functions"](../installations/asset-chain-parameters.html#notes-on-how-ac-staked-functions), the method of rewards for the coin will vary over time. The coins that are mined via `ac_staked` will be included in the `ac_perc` calculations until block height `100000`. Therefore, the `pubkey` that receives `ac_perc` block rewards will receive slightly more for the first `100000` blocks.
+This example coin combines both `ac_staked` and `ac_perc`. As described in the section, ["Notes on How ac_staked Functions"](../installations/asset-chain-parameters.html#notes-on-how-ac-staked-functions), the method of rewards for the coin will vary over time. The coins used to stake will be included in the `ac_perc` calculations until block height `100000`. Therefore, the `pubkey` that receives `ac_perc` block rewards will receive more for the first `100000` blocks.
 
 Other coin details include that it is a 777777-coin pre-mine, with a 10-coin block reward, and the chain adjusts difficulty so that 50% of the blocks are mined via PoS, and 50% via PoW. 
 
@@ -270,7 +298,7 @@ The `pubkey` must be a 66 character string (a compressed pubkey). You can find t
 
 #### :pushpin: Examples:
 
-This example coin combines both `ac_staked` and `ac_perc`. As described in the section, ["Notes on How ac_staked Functions"](../installations/asset-chain-parameters.html#notes-on-how-ac-staked-functions), the method of rewards for the coin will vary over time. The coins that are mined via `ac_staked` will be included in the `ac_perc` calculations until block height `100000`. Therefore, the `pubkey` that receives `ac_perc` block rewards will receive slightly more for the first `100000` blocks.
+This example coin combines both `ac_staked` and `ac_perc`. As described in the section, ["Notes on How ac_staked Functions"](../installations/asset-chain-parameters.html#notes-on-how-ac-staked-functions), the method of rewards for the coin will vary over time. The coins used to stake will be included in the `ac_perc` calculations until block height `100000`. Therefore, the `pubkey` that receives `ac_perc` block rewards will receive more for the first `100000` blocks.
 
 Other coin details include that it is a 777777-coin pre-mine, with a 10-coin block reward, and the chain adjusts difficulty so that 50% of the blocks are mined via PoS, and 50% via PoW. 
 
@@ -284,7 +312,7 @@ After the first `100000` blocks, the rewards from `ac_staked` are no longer incl
 
 ## ac_script
 
-The `ac_script` parameter enables the `ac_founders` reward to be sent to a multisig address or any p2sh address. If this parameter is used, block 1 (the "premine") will be mined to the `ac_script` address.
+The `ac_script` parameter enables the `ac_founders` reward to be sent to a multi-signature address or any p2sh address. If this parameter is used, block 1 (the "premine") will be mined to the `ac_script` address.
 
 This parameter requires that `ac_founders` also be active. If `ac_script` is set, `ac_pubkey` must not be.
 
@@ -292,7 +320,7 @@ This parameter requires that `ac_founders` also be active. If `ac_script` is set
 
 #### Finding the `"scriptPubKey"`:
 
-To find the `"scriptPubKey"` value, first create a multisig address with the [createmultisig](../komodo-api/util.html#createmultisig) command.
+To find the `"scriptPubKey"` value, first create a multi-signature address with the [createmultisig](../komodo-api/util.html#createmultisig) command.
 
 Command:
 
@@ -440,7 +468,7 @@ When creating a chain with the `ac_staked` parameter, the creation process is sl
 * Execute `setgenerate false` to stop mining
 * All of the coins (including the pre-mine) are now located on the node that mined two blocks. Do not split them with a normal transaction. Rather, split them using this tool: [link](https://github.com/KMDLabs/pos64staker).
 * Send coins to the other node, and on both nodes use the `generate` method to begin staking.
-* Use the [getbalance](../komodo-api/wallet.html#getbalance64) method to ensure that there are coins staking in all 64 segids before block 10.
+* Use the [getbalance64](../komodo-api/wallet.html#getbalance64) method to ensure that there are coins staking in all 64 segids before block 10.
 
 Following the above instructions will ensure that the asset chain is stable.
 
@@ -470,7 +498,7 @@ You can see which segment an address belongs to by using the [validateaddress](.
 
 Each staked block will have an additional transaction added to the end of the block in which the coins that staked the block are sent back to the same address. This is used to verify which coins staked the block, and this allows for compatibility with existing Komodo infrastructure.
 
-There are additional considerations when `ac_staked` is used in conjunction with [ac_perc](../installations/asset-chain-parameters.html#ac-perc) and [ac_pubkey](../installations/asset-chain-parameters.html#ac-pubkey). The coins that are mined via `ac_staked` will be included in the `ac_perc` calculations until the asset chain reaches block height `1000000`. Therefore, the [ac_pubkey](../installations/asset-chain-parameters.html#ac-pubkey) address will receive slightly more coins for each staked block compared to a mined block because of this extra transaction. After block `1000000`, `ac_perc` will no longer include the coins mined from `ac_staked`, and therefore the amount of coins sent to the `ac_pubkey` address will normalize.
+There are additional considerations when `ac_staked` is used in conjunction with [ac_perc](../installations/asset-chain-parameters.html#ac-perc) and [ac_pubkey](../installations/asset-chain-parameters.html#ac-pubkey). The coins used to stake will be included in the `ac_perc` calculations until the asset chain reaches block height `1000000`. Therefore, the [ac_pubkey](../installations/asset-chain-parameters.html#ac-pubkey) address will receive more coins for each staked block compared to a mined block. After block `1000000`, `ac_perc` will no longer include the coins used for staking, and therefore the amount of coins sent to the `ac_pubkey` address will normalize.
 
 ### Rules for Staking a Block
 
@@ -518,7 +546,7 @@ A 777777-coin pre-mine, a 1000-coin block reward, the block reward decreases by 
 
 ## ac_public
 
-If `ac_public` is set to `1`, zk-SNARKs are disabled, and all z address functionalilty is disabled. Therefore, all transactions on the blockchain are public.
+If `ac_public` is set to `1`, zk-SNARKs are disabled, and all z address functionality is disabled. Therefore, all transactions on the blockchain are public.
 
 #### :pushpin: Examples:
 
@@ -548,7 +576,7 @@ A private-only asset chain.
 
 The `ac_sapling` parameter adjusts the block height of an asset chain's default sapling activation. (Sapling is an upstream privacy technology provided by [Zcash](https://z.cash/), of which Komodo is a fork.)
 
-By default, sapling will activate at block 61 on a newly created assetchain.
+By default, sapling will activate at block 61 on a newly created asset chain.
 
 This can also be used to activate sapling prior to block 61. (Activating sapling prior to block 61 should not be done on a chain intended for production use.)
 
@@ -613,6 +641,18 @@ When activated, the chain uses [Verus](http://veruscoin.io/)'s proof of stake im
 
 The only valid value for this parameter is `-ac_veruspos=50`. (`ac_veruspos` does not have the same segid mechanism as `-ac_staked`.)
 
+## ac_cclib
+
+The `ac_cclib` parameter is used in conjunction with various CryptoConditions modules. 
+
+Typically, the asset chain that uses the `ac_cclib` parameter will have a unique build process. This is described as a part of each CryptoConditions module in question. Once the asset chain is properly built, the terminal command to launch the chain will include the `ac_cclib` parameter in a manner similar to the following:
+
+```
+-ac_cclib=desired_CC_module
+```
+
+Each CC module uses the `ac_cclib` parameter differently, and therefore the reader should refer to the desired CryptoConditions module for further instructions.  
+
 ## ac_ccenable
 
 ::: warning
@@ -636,5 +676,5 @@ When `-ac_cc` is set, but `-ac_ccenable` is not, all CryptoConditions modules ar
 :::
 
 ::: warning
-If the developer is also using a new feature that has yet to be documented here, `ac_cclib`, the evalcodes in the `libcc.so` will not disable CryptoConditions RPC calls. Therefore, there remains a risk that a disabled RPC call can still be used to create a utxo, which will then be unspendable.
+If the developer is also using a new feature that has yet to be documented here, `ac_cclib`, the evalcodes in the `libcc.so` will not disable CryptoConditions RPC calls. Therefore, there remains a risk that a disabled RPC call can still be used to create a utxo, which will then be non-spendable.
 :::

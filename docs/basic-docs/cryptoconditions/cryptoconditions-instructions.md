@@ -1,6 +1,6 @@
-# Crypto Conditions Instructions
+# CryptoConditions Instructions
 
-## Understanding the Types of Addresses Used in Crypto Conditions-Based Contracts
+## Understanding the Types of Addresses
 
 The method of transferring contract-related assets is often slightly different than the typical asset-chain transaction.
 
@@ -10,9 +10,9 @@ When using CryptoConditions, however, there are a few new types of addresses to 
 
 ## Creating and Launching With a Pubkey
 
-The first address you must understand is the pubkey. Any user using a Crypto Conditions based contract must have a pubkey indicated in their daemon. This forms the basis for all addresses related to various contract modules.
+The first address you must understand is the pubkey. Any user using a CryptoConditions based contract must have a pubkey indicated in their daemon. This forms the basis for all addresses related to various contract modules.
 
-Typically, each contract module will take the pubkey, combine it with a unique and contract-specific number called the `EVAL code`, and create a new [Base58Check](https://en.bitcoin.it/wiki/Base58Check_encoding) encoded address from it. This `Base58Check` encoded address will be the address you use for interacting with the specific Crypto Conditions-based contract.
+Typically, each contract module will take the pubkey, combine it with a unique and contract-specific number called the `EVAL code`, and create a new [Base58Check](https://en.bitcoin.it/wiki/Base58Check_encoding) encoded address from it. This `Base58Check` encoded address will be the address you use for interacting with the specific CryptoConditions-based contract.
 
 To get a pubkey, launch the chain with the normal launch parameters and execute the [getnewaddress](../komodo-api/wallet.html#getnewaddress) rpc call.
 
@@ -70,7 +70,7 @@ To discover the addresses the pubkey provides, you will typically use an `addres
 }
 ```
 
-In this list, the `FaucetCCaddress` is the address that corresponds to the default `Faucet` contract. `myCCaddress` is the address your node uses for interacting with  the `Faucet` contract; it is based on the combination of your pubkey and the `Faucet` contract's unique `EVAL` code (which you do not typically see).
+In this list, the `FaucetCCaddress` is the address that corresponds to the default `Faucet` contract. `myCCaddress` is the address your node uses for interacting with the `Faucet` contract; it is based on the combination of your pubkey and the `Faucet` contract's unique `EVAL` code (which you do not typically see).
 
 The `myaddress` property is the unmodified address that corresponds to your pubkey.
 
