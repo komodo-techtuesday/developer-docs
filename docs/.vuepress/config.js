@@ -107,6 +107,27 @@ module.exports = {
             ["/basic-docs/komodo-api/util.md", "Util"],
             ["/basic-docs/komodo-api/wallet.md", "Wallet"]
           ]
+        },
+        {
+          title: "Mylo",
+          collapsable: true,
+          children: [
+            [
+              "/devportal/introduction.md",
+              "Introduction"
+            ],
+            ["/devportal/core-concepts.md", "Core Concepts"],
+            ["/devportal/getting-started/introduction.md", "Getting Started"],
+            ["/devportal/getting-help.md", "Getting Help"],
+            ["/devportal/developers/cryptographers.md", "Developers"],
+            ["/devportal/non-developers/marketers.md", "Non-Developers"],
+            ["/devportal/ecosystem-services.md", "Ecosystem Services"],
+            ["/devportal/infrastructure-operations/introduction.md", "Infrastructure"],
+            ["/devportal/cc/dapps-crypto-conditions.md", "CC"],
+            ["/devportal/games/tetris.md", "Games"],
+            ["/devportal/guides/guides.md", "Guides"],
+            ["/devportal/focus/focus.md", "Focus"]
+          ]
         }
       ],
       "/bsk/": [{
